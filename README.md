@@ -2,6 +2,7 @@
 
 The task is to predict player's ELO rating based on moves played in their game.
 Dataset: open data from Lichess database (https://database.lichess.org/)
+Inspired by **"Guess the ELO"** by GothamChess
 
 Pipeline (these steps correspond to jupyter notebooks):
 1. Parse and filter data to a table format
@@ -12,3 +13,6 @@ Pipeline (these steps correspond to jupyter notebooks):
 6. (optional) Visualize data using PCA
 7. (optional) Change task from regression to multi-class classification
 8. (optional) Try neural network model
+
+PCA visualization:
+![example](https://github.com/maximdu/chessdata/blob/main/chessdata/presentation/images/pca.png?raw=true)
