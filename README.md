@@ -1,7 +1,9 @@
 ## ML Course project
 
 The task is to predict player's ELO rating based on moves played in their game.
+
 Dataset: open data from Lichess database (https://database.lichess.org/)
+
 Inspired by **"Guess the ELO"** by GothamChess
 
 Pipeline (these steps correspond to jupyter notebooks):
