@@ -16,5 +16,10 @@ Pipeline (these steps correspond to jupyter notebooks):
 7. (optional) Change task from regression to multi-class classification
 8. (optional) Try neural network model
 
+Results: CatBoost model, cross-validation:
+![pic](https://github.com/maximdu/chessdata/blob/main/chessdata/presentation/images/catboost_r2.png?raw=true)
+
+![pic](https://github.com/maximdu/chessdata/blob/main/chessdata/presentation/images/catboost_mae.png?raw=true)
+
 PCA visualization:
-![example](https://github.com/maximdu/chessdata/blob/main/chessdata/presentation/images/pca.png?raw=true)
+![pic](https://github.com/maximdu/chessdata/blob/main/chessdata/presentation/images/pca.png?raw=true)
