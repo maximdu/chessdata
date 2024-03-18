@@ -11,10 +11,11 @@ Pipeline (these steps correspond to jupyter notebooks):
 2. Extract features from data
 3. Perform binning (to prevent overfitting)
 4. Add mean encoding to categorical features
-5. Train and compare models
+5. Add opening lines analysis
 6. (optional) Visualize data using PCA
-7. (optional) Change task from regression to multi-class classification
-8. (optional) Try neural network model
+7. Train and compare regression models
+8. (todo) Change task from regression to multi-class classification
+9. (todo) Try neural network model
 
 Results (CatBoost model, cross-validation):
 
