@@ -8,14 +8,14 @@ Inspired by **"Guess the ELO"** by GothamChess
 
 Pipeline (these steps correspond to jupyter notebooks):
 1. Parse and filter data to a table format
-2. Extract features from data
-3. Perform binning (to prevent overfitting)
-4. Add mean encoding to categorical features
-5. Add opening lines analysis
-6. (optional) Visualize data using PCA
-7. Train and compare regression models
-8. (todo) Change task from regression to multi-class classification
-9. (todo) Try neural network model
+2. Convert cantipawn evaluation to odds of winning
+3. (optional) Grid search for features
+4. Extract features from data
+5. Perform binning
+6. Add mean encoding to categorical features
+7. (optional) Visualize data using PCA
+8. Train and compare regression models
+9. (optional) Change task from regression to multi-class classification
 
 Results (CatBoost model, cross-validation):
 
