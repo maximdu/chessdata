@@ -24,4 +24,4 @@ Results (CatBoost model, cross-validation):
 ![pic](https://github.com/maximdu/chessdata/blob/main/chessdata/presentation/images/catboost_mae.png?raw=true)
 
 PCA visualization:
-![pic](https://github.com/maximdu/chessdata/blob/main/chessdata/presentation/images/pca.png?raw=true)
+![pic](https://github.com/maximdu/chessdata/blob/main/chessdata/presentation/images/pca_smooth.png?raw=true)
