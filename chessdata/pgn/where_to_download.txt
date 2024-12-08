@@ -1,0 +1,2 @@
+download .pgn from database.lichess.org/
+unzip with zstd from github.com/facebook/zstd
