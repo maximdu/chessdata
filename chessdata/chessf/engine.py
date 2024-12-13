@@ -66,7 +66,7 @@ class Position:
 
     def get_bitboard_matrix(self):
         square_id = 0
-        bitboard = np.zeros((12, 64), dtype=np.uint8)
+        bitboard = np.zeros((12, 8, 8), dtype=np.uint8)
 
         piece_values = dict(
             K=0, Q=1, R=2, B=3, N=4, P=5,
@@ -80,10 +80,10 @@ class Position:
                 if square_id % 8 != 0:
                     raise Exception(f"{fen}")
             else:
-                # file = square_id % 8
-                # rank = square_id // 8
                 piece_layer = piece_values[char]
-                bitboard[piece_layer, square_id] = 1
+                rank = square_id // 8
+                file = square_id % 8
+                bitboard[piece_layer, rank, file] = 1
                 square_id += 1
 
         if square_id != 64:

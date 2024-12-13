@@ -38,24 +38,46 @@ class FilePGN:
 
         return new
         
-    
-    def get_and_parse_next_game(self):
-        game = self.get_next_game()
-        params = self.params_to_dict(game[:-1])
+    @staticmethod
+    def is_good_game(info):
+        if info.get("TimeControl", "0+0").split("+")[0] not in ["600", "900"]:
+            return False
         
-        moves = [
-            string
-            for string in game[-1].split()
-            if string[0].isalpha()
-        ]
+        WhiteRatingDiff = info.get("WhiteRatingDiff", 1000) or 1000
+        if abs(WhiteRatingDiff) > 25:
+            return False
+        BlackRatingDiff = info.get("WhiteRatingDiff", 1000) or 1000
+        if abs(BlackRatingDiff) > 25:
+            return False
+            
+        if info.get('Termination', '-') not in ['Normal', 'Time forfeit']:
+            return False
+        if info.get("Result", "-") not in ["1-0", "0-1", "1/2-1/2"]:
+            return False
+            
+        return True
 
-        moves = [
-            self.parse_pgn_move(move, self.get_side(k))
-            for k, move in enumerate(moves)
-        ]
-        
-        return (moves, params, game[-1])
-        # return (moves, params)
+    
+    def get_and_parse_next_good_game(self):
+        while True:
+            game = self.get_next_game()
+            params = self.params_to_dict(game[:-1])
+            if not self.is_good_game(params):
+                continue
+            
+            moves = [
+                string
+                for string in game[-1].split()
+                if string[0].isalpha()
+            ]
+    
+            moves = [
+                self.parse_pgn_move(move, self.get_side(k))
+                for k, move in enumerate(moves)
+            ]
+            
+            # return (moves, params, game[-1])
+            return (moves, params)
 
     @staticmethod
     def get_side(k):
