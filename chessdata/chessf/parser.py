@@ -27,7 +27,7 @@ class FilePGN:
         }
 
         new = {}
-        str_params = ["Site", "Result", "TimeControl", "Termination"]
+        str_params = ["Site", "Result", "TimeControl", "Termination", "ECO", "Opening"]
         int_params = ["WhiteElo", "BlackElo", "WhiteRatingDiff", "BlackRatingDiff"]
         
         for i in str_params:
@@ -52,7 +52,7 @@ class FilePGN:
             
         if info.get('Termination', '-') not in ['Normal', 'Time forfeit']:
             return False
-        if info.get("Result", "-") not in ["1-0", "0-1", "1/2-1/2"]:
+        if info.get("Result", "-") not in ["1-0", "0-1"]:
             return False
             
         return True

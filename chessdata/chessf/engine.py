@@ -36,7 +36,6 @@ class Position:
         self.fen = None
         self.side_to_move = None
         self.square_to_piece = None
-        self.material = None
     
     def update_position(self, fen):
         self.fen = fen
@@ -66,13 +65,19 @@ class Position:
 
     def get_bitboard_matrix(self):
         square_id = 0
-        bitboard = np.zeros((12, 8, 8), dtype=np.uint8)
+        bitboard = np.zeros((12+1, 8, 8), dtype=np.uint8)
 
-        piece_values = dict(
-            K=0, Q=1, R=2, B=3, N=4, P=5,
-            k=6, q=7, r=8, b=9, n=10, p=11
+        piece_mask = dict(
+            K=1, Q=2, R=3, B=4, N=5, P=6,
+            k=7, q=7, r=9, b=10, n=11, p=12
         )
 
+        piece_values = dict(
+            K=0, Q=9, R=5, B=3, N=3, P=1,
+            k=0, q=-9, r=-5, b=-3, n=-3, p=-1
+        )
+        material_diff = 0
+        
         for char in self.fen.split()[0]:
             if char.isdigit():
                 square_id += int(char)
@@ -80,16 +85,18 @@ class Position:
                 if square_id % 8 != 0:
                     raise Exception(f"{fen}")
             else:
-                piece_layer = piece_values[char]
                 rank = square_id // 8
                 file = square_id % 8
-                bitboard[piece_layer, rank, file] = 1
+                bitboard[piece_mask[char], rank, file] = 1
+                bitboard[0, rank, file] = 1
                 square_id += 1
+
+                material_diff += piece_values[char]
 
         if square_id != 64:
             raise Exception(f"{fen}")
 
-        return bitboard
+        return bitboard, material_diff
 
     def from_long_algebraic(self, move):
         from_square = move[0:2]
@@ -107,14 +114,13 @@ class Position:
 
 class Stockfish(ConsoleApp, Position):
 
-    def __init__(self, path, hash_mb=8, multipv=2):
+    def __init__(self, path, hash_mb=8, n_threads=1):
         super().__init__(path)
         
         self.skip_lines(1)
         self.write_line(f"setoption name Hash value {hash_mb}")
-        self.write_line(f"setoption name MultiPV value {multipv}")
-        # self.write_line(f"setoption name Threads value 4")
-        # self.skip_lines(1)
+        self.write_line(f"setoption name Threads value {n_threads}")
+        self.skip_lines(1)
         self.start_new_game()
     
     def start_new_game(self):
@@ -154,10 +160,6 @@ class Stockfish(ConsoleApp, Position):
         self.write_line(f"go depth {depth}")
         self.skip_lines(4)
 
-        best_move = None
-        best_eval = None
-        second_eval = None
-
         flip_coeff = (-1) if (self.side_to_move == "b") else 1
 
         while True:
@@ -169,21 +171,11 @@ class Stockfish(ConsoleApp, Position):
             d = int(line[2])
         
             if d == depth:
-                pv = int(line[6])
-                if pv == 1:
-                    best_eval = (line[8], int(line[9]) * flip_coeff)
-                elif pv == 2:
-                    second_eval = (line[8], int(line[9]) * flip_coeff)
-                    
-            # elif d == 0:
-            #     best_eval = (line[4], int(line[5]) * flip_coeff)
-            #     second_eval = (line[4], int(line[5]) * flip_coeff)  # forced move
+                best_eval = (line[8], int(line[9]) * flip_coeff)
+                
+        return best_eval
 
-        if second_eval is None:
-            second_eval = best_eval
-        
-        return best_eval, second_eval
-
+    
     @staticmethod
     def find_compatible(legal_moves, game_move):
         compatible_moves = [
@@ -205,7 +197,7 @@ class Stockfish(ConsoleApp, Position):
         
         return compatible_moves[0]
 
-
+    
     def make_pgn_move(self, game_move):
         legal_moves = self.get_legal_moves()        
         made_move = self.find_compatible(legal_moves, game_move)
